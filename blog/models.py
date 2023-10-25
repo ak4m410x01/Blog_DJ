@@ -20,7 +20,7 @@ class Post(models.Model):
     status = models.CharField(
         max_length=2, choices=Status.choices, default=Status.DRAFT
     )
-    auther = models.ForeignKey(
+    author = models.ForeignKey(
         to=User, on_delete=models.CASCADE, related_name="blog_posts"
     )
 
