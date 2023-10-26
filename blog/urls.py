@@ -12,4 +12,5 @@ urlpatterns = [
         views.postDetail,
         name="postDetail",
     ),
+    path("post/list/cbv/", views.postListView.as_view(), name="postListView"),
 ]
