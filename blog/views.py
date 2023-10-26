@@ -18,7 +18,7 @@ def postList(request):
     return render(request, "blog/post/list.html", {"posts": posts})
 
 
-def postDetail(request, id):
+def postDetail(request, year, month, day, post):
     # Method 1
     # try:
     #     post = Post.objects.get(id=id)
@@ -26,6 +26,13 @@ def postDetail(request, id):
     #     return Http404("No Post Found.")
 
     # Method 2
-    post = get_object_or_404(Post, id=id)
+    post = get_object_or_404(
+        Post,
+        status=Post.Status.PUBLISHED,
+        publish__year=year,
+        publish__month=month,
+        publish__day=day,
+        slug=post,
+    )
 
     return render(request, "blog/post/detail.html", {"post": post})

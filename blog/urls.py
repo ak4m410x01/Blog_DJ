@@ -7,5 +7,9 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("about/", views.about, name="about"),
     path("post/list/", views.postList, name="postList"),
-    path("post/<int:id>/", views.postDetail, name="postDetail"),
+    path(
+        "post/<int:year>/<int:month>/<int:day>/<slug:post>/",
+        views.postDetail,
+        name="postDetail",
+    ),
 ]
