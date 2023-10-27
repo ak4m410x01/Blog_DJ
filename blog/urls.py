@@ -13,4 +13,10 @@ urlpatterns = [
         name="postDetail",
     ),
     path("post/list/cbv/", views.postListView.as_view(), name="postListView"),
+    # Share Post
+    path(
+        "post/<int:year>/<int:month>/<int:day>/<slug:post>/share/",
+        views.postShare,
+        name="postShare",
+    ),
 ]

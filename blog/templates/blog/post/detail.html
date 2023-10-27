@@ -8,4 +8,9 @@
     Published {{ post.publish }} by {{ post.author }}
 </p>
 {{ post.body|linebreaks }}
+<p>
+    <a href="{{post.get_absolute_url}}share/">
+        Share this post
+    </a>
+</p>
 {% endblock %}
