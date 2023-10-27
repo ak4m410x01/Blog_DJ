@@ -1,9 +1,10 @@
 from django.shortcuts import get_object_or_404, render
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.decorators.http import require_POST
 from django.core.mail import send_mail
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from .models import Post
-from .forms import EmailPostForm
+from .forms import EmailPostForm, CommentForm
 
 # Create your views here.
 
@@ -59,7 +60,13 @@ def postDetail(request, year, month, day, post):
         slug=post,
     )
 
-    return render(request, "blog/post/detail.html", {"post": post})
+    comments = post.comments.filter(active=True)
+    context = {
+        "post": post,
+        "comments": comments,
+        "form": CommentForm(),
+    }
+    return render(request, "blog/post/detail.html", context=context)
 
 
 def postShare(request, year, month, day, post):
@@ -99,3 +106,34 @@ def postShare(request, year, month, day, post):
         "isSent": isSent,
     }
     return render(request, "blog/post/postShare.html", context=context)
+
+
+@require_POST
+def postComment(request, year, month, day, post):
+    # Get Post from database
+    post = get_object_or_404(
+        Post,
+        status=Post.Status.PUBLISHED,
+        publish__year=year,
+        publish__month=month,
+        publish__day=day,
+        slug=post,
+    )
+    comment = None
+
+    # Get Data From POST request as formData
+    formData = CommentForm(request.POST)
+
+    # Check if formData is_valid and save if valid
+    if formData.is_valid():
+        # link comment with thier post and save
+        comment = formData.save(commit=False)
+        comment.post = post
+        comment.save()
+
+    context = {
+        "post": post,
+        "form": formData,
+        "comment": comment,
+    }
+    return render(request, "blog/post/postComment.html", context=context)

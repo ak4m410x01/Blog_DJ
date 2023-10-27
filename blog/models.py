@@ -44,3 +44,22 @@ class Post(models.Model):
                 self.slug,
             ],
         )
+
+
+class Comment(models.Model):
+    name = models.CharField(max_length=30)
+    email = models.EmailField()
+    body = models.TextField(max_length=10000)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name="comments")
+
+    class Meta:
+        ordering = ["-created"]
+        indexes = [
+            models.Index(fields=["-created"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"Comment by {self.name} on {self.post}"

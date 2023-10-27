@@ -19,4 +19,10 @@ urlpatterns = [
         views.postShare,
         name="postShare",
     ),
+    # Comment on Post
+    path(
+        "post/<int:year>/<int:month>/<int:day>/<slug:post>/comment/",
+        views.postComment,
+        name="postComment",
+    ),
 ]
