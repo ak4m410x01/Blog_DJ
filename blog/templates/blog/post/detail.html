@@ -8,4 +8,33 @@
     Published {{ post.publish }} by {{ post.author }}
 </p>
 {{ post.body|linebreaks }}
+<p>
+    <a href="{{post.get_absolute_url}}share/">
+        Share this post
+    </a>
+</p>
+
+<hr>
+
+{% with comments.count as totalComments %}
+<h2>
+    {{totalComments}} comment{{totalComments|pluralize}}
+</h2>
+{% endwith %}
+
+
+{% for comment in comments %}
+<div class="comment">
+    <p class="info">
+        Comment {{ forloop.counter }} by {{ comment.name }}
+        {{ comment.created|date:"Y-m-d" }}
+    </p>
+    {{ comment.body|linebreaks }}
+</div>
+{% empty %}
+
+<p>There is no comments.</p>
+
+{% endfor %}
+{% include 'blog/post/include/commentForm.html' %}
 {% endblock %}
