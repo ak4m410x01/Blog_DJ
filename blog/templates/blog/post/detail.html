@@ -16,6 +16,20 @@
 
 <hr>
 
+<h1>Similar Posts</h1>
+
+{% for post in postsWithSameTags %}
+
+<p>
+    <a href="{{post.get_absolute_url}}">{{post.title}} - {{post.same_tags}}</a>
+</p>
+
+{% empty %}
+No Similar posts
+{% endfor %}
+
+<hr>
+
 {% with comments.count as totalComments %}
 <h2>
     {{totalComments}} comment{{totalComments|pluralize}}

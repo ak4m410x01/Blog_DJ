@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
 from django.core.mail import send_mail
+from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from blog.models import Post
@@ -73,12 +74,20 @@ def postDetail(request, year, month, day, post):
     )
 
     comments = post.comments.filter(active=True)
+
+    postTagsIDs = post.tags.values_list("id", flat=True)
+    postsWithSameTags = Post.objects.filter(tags__in=postTagsIDs).exclude(id=post.id)
+    postsWithSameTags = postsWithSameTags.annotate(same_tags=Count("tags")).order_by(
+        "-same_tags", "-publish"
+    )
+
     context = {
         "post": post,
         "comments": comments,
         "form": CommentForm(),
+        "postsWithSameTags": postsWithSameTags,
     }
-    return render(request, "blog/post/detail.html", context=context)
+    return render(request, "blog/post/detail.html", context)
 
 
 def postShare(request, year, month, day, post):
